@@ -63,7 +63,7 @@ function resize_heart() {
     $("#code").css("height", height)
     if (width < 900) {
         log("small")
-        $("#code").css("font-size", "5em")
+        $("#code").css("font-size", "4em")
         $("#code").css("margin", "auto")
     }
     log("heart", heart.width(), heart.height())
