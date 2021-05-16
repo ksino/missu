@@ -165,7 +165,7 @@ function convertText(array) {
                 if (progress >= str.length) {
                     clearInterval(timer)
                 }
-            }, 75)
+            }, 200)
         })
         return this
     }
