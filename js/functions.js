@@ -201,24 +201,15 @@ function timeElapse(date) {
  * 显示心型图的文字
  */
 function show_message() {
-    adjustWordsPosition()
+    adjust_words_position()
     let message = $("#messages")
-    let html = `${info.message}
-                    <div id="elapseClock"></div>`
-    message.html(html)
-    message.fadeIn(5000, function () {
+    let showtime = $("#elapseClock")
+    message.html(info.message)
+    message.fadeIn(2000, function () {
+        showtime.fadeIn(2000)
         showLoveU()
+        $("#touch").html("试一下触摸我的心灵吗？").hide().fadeIn(6000)
     })
-}
-
-function adjustWordsPosition() {
-    $('#words').css("position", "absolute")
-    $('#words').css("top", $("#garden").position().top + 195)
-    $('#words').css("left", $("#garden").position().left + 70)
-}
-
-function adjustCodePosition() {
-    $('#code').css("margin-top", ($("#garden").height() - $("#code").height()) / 2)
 }
 
 /**
@@ -228,8 +219,20 @@ function showLoveU() {
     let love = $('#loveu')
     let html = `${info.love}<br/><div class="signature"> ${info.signal}</div>`
     love.html(html)
-    love.fadeIn(3000)
+    love.fadeIn(4000)
 }
+
+function adjust_words_position() {
+    $('#words').css("position", "absolute")
+    $('#words').css("top", $("#garden").position().top + 195)
+    $('#words').css("left", $("#garden").position().left + 70)
+}
+
+function adjust_code_position() {
+    $('#code').css("margin-top", ($("#garden").height() - $("#code").height()) / 2)
+}
+
+
 
 /**
  * 读取json文件
@@ -245,7 +248,6 @@ function get_info() {
             log("fail")
         }
     }
-
     $.ajax(request)
 }
 
@@ -264,6 +266,5 @@ function read_letter(data) {
             log("fail")
         }
     }
-
     $.ajax(request)
 }
