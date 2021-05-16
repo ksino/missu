@@ -51,6 +51,22 @@ $(window).resize(function () {
     }
 })
 
+function resize_heart() {
+    let width = window.screen.availWidth
+    let height = window.screen.availHeight
+    log("window", width, height)
+    let heart = $("#loveHeart")
+    heart.width
+    heart.css("width", width * 0.9)
+    heart.css("height", width * 0.9 * 625 / 670)
+    $("#code").css("width", width * 0.9)
+    $("#code").css("height", height)
+    if ($("#code").width() < 500) {
+        $("#code").css("font-size", "2.5em")
+    }
+    log("heart", heart.width(), heart.height())
+}
+
 function getHeartPoint(angle) {
     var t = angle / Math.PI;
     var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
@@ -231,8 +247,6 @@ function adjust_words_position() {
 function adjust_code_position() {
     $('#code').css("margin-top", ($("#garden").height() - $("#code").height()) / 2)
 }
-
-
 
 /**
  * 读取json文件
