@@ -63,11 +63,11 @@ function resize_heart() {
     let heart = $("#loveHeart")
     log("window", width, height)
 
-    if (width < 900) {
-        log("small")
-        // $("#mainDiv").css("height", height)
-        $("#letter").css("font-size", "3rem")
-    }
+    // if (width < 900) {
+    //     log("small")
+    //     // $("#mainDiv").css("height", height)
+    //     $("#letter").css("font-size", "3rem")
+    // }
 }
 
 function getHeartPoint(angle) {
