@@ -89,7 +89,7 @@ function startHeartAnimation() {
     }, interval)
 }
 
-function convertText(array) {
+function text_to_html(array) {
     // array是数组 按照回车符号'\r\n' 切割的文本
     length = array.length
     let html = ""
@@ -148,7 +148,7 @@ function convertText(array) {
             //         clearInterval(waitTimer)
             //     }
             // }, 75)
-            str = convertText(content)
+            str = text_to_html(content)
             let timer = setInterval(function () {
                 let current = str.substr(progress, 1)
                 // log("current", current)
@@ -259,7 +259,11 @@ function read_letter(data) {
         type: "get",
         async: false,
         success: (res) => {
-            content = res.split('\r\n')
+            if (res.indexOf('\r\n')) {
+                content = res.split('\r\n')
+            } else {
+                content = res.split('\n')
+            }
             log(content)
         },
         error: () => {
