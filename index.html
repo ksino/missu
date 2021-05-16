@@ -3,6 +3,7 @@
 <head>
     <title>Our Love Story</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <style type="text/css">
         @font-face {
             font-family: digit;
@@ -52,14 +53,10 @@
         <div id="loveHeart">
             <canvas id="garden"></canvas>
             <div id="words">
-                <div id="messages">
-                    Minyue, I have fallen in love with you for
-                    <div id="elapseClock"></div>
-                </div>
-                <div id="loveu">
-                    Love u forever and ever.<br/>
-                    <div class="signature">- hackerzhou</div>
-                </div>
+                <div id="messages"></div>
+                <div id="elapseClock"></div>
+                <div id="loveu"></div>
+                <div id="touch"></div>
             </div>
         </div>
     </div>
@@ -70,7 +67,7 @@
 </div>
 <script type="text/javascript">
     get_info()
-    log("info", info)
+    resize()
     var offsetX = $("#loveHeart").width() / 2
     var offsetY = $("#loveHeart").height() / 2 - 55
     let together = new Date()
@@ -83,7 +80,7 @@
     if (!document.createElement('canvas').getContext) {
         var msg = document.createElement("div")
         msg.id = "errorMsg"
-        msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"
+        msg.innerHTML = "Your browser doesn't support HTML5!<br/>"
         document.body.appendChild(msg)
         $("#code").css("display", "none")
         $("#copyright").css("position", "absolute")
@@ -96,14 +93,21 @@
         }, 30)
 
         timeElapse(together)
+        $("#elapseClock").hide()
         // 更新时间
         setInterval(function () {
             timeElapse(together)
         }, 500)
 
-        adjustCodePosition()
-        // 显示文字
-        $("#code").typewriter()
+        // 点击心形图之后再显示文字
+        $("#loveHeart").bind("click", function () {
+            log("loveHeart")
+            adjustCodePosition()
+            // 显示文字
+            $("#code").css("display", "block")
+            $("#code").typewriter()
+            $("#loveHeart").css("display", "none").hide()
+        })
     }
 </script>
 </body>

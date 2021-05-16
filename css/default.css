@@ -48,8 +48,8 @@ body {
 #loveu{
 	padding: 5px;
 	font-size: 22px;
-	margin-top: 80px;
-	margin-right: 120px;
+	margin-top: 1em;
+	margin-right: 3em;
 	text-align: right;
 	display: none;
 }
@@ -60,17 +60,23 @@ body {
 	font-style: italic;
 }
 
+#touch {
+    color: #FF71B3;
+    text-align: center;
+}
+
 #clickSound{
 	display:none;
 }
 
 #code {
+	display: none;
 	float: left;
 	width: 440px;
 	height: 400px;
 	color: #333;
 	font-family: "Consolas", "Monaco", "Bitstream Vera Sans Mono", "Courier New", "sans-serif";
-	font-size: 12px;
+	font-size: 1.5em;
 }
 
 #code .string{
@@ -113,3 +119,10 @@ body {
 #copyright a{
 	color:#666;
 }
+
+
+
+@media only screen and (max-width: 500px) {
+
+}
+
