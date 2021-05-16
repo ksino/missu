@@ -5,9 +5,6 @@ let content
 var clientWidth = $(window).width()
 var clientHeight = $(window).height()
 
-/**
- * 打印函数
- */
 function log() {
     console.log.apply(console, arguments)
 }
@@ -15,8 +12,8 @@ function log() {
 $(function () {
     // setup garden
     $loveHeart = $("#loveHeart")
-    // var offsetX = $loveHeart.width() / 2
-    // var offsetY = $loveHeart.height() / 2 - 55
+    var offsetX = $loveHeart.width() / 2
+    var offsetY = $loveHeart.height() / 2 - 55
     $garden = $("#garden")
     gardenCanvas = $garden[0]
     gardenCanvas.width = $("#loveHeart").width()
@@ -53,18 +50,6 @@ $(window).resize(function () {
 
     }
 })
-
-
-function resize() {
-    let width = $(window).width()
-    let height = $(window).height()
-    log("window", width, height)
-    let heart = $("#loveHeart")
-    heart.css("width", width)
-    heart.css("height", width * 625 / 670)
-    log(heart.width(), heart.height())
-
-}
 
 function getHeartPoint(angle) {
     var t = angle / Math.PI;
@@ -218,11 +203,10 @@ function timeElapse(date) {
 function show_message() {
     adjustWordsPosition()
     let message = $("#messages")
-    let html = `${info.message}`
+    let html = `${info.message}
+                    <div id="elapseClock"></div>`
     message.html(html)
     message.fadeIn(5000, function () {
-        $("#elapseClock").show()
-        $("#elapseClock").fadeIn(3000)
         showLoveU()
     })
 }
@@ -244,10 +228,7 @@ function showLoveU() {
     let love = $('#loveu')
     let html = `${info.love}<br/><div class="signature"> ${info.signal}</div>`
     love.html(html)
-    love.fadeIn(4000)
-    let touch = $("#touch")
-    touch.html("可以试着点击一下吗?").hide()
-    touch.fadeIn(6000)
+    love.fadeIn(3000)
 }
 
 /**
