@@ -208,7 +208,7 @@ function show_message() {
     message.fadeIn(2000, function () {
         showtime.fadeIn(2000)
         showLoveU()
-        $("#touch").html("试一下触摸我的心灵吗？").hide().fadeIn(6000)
+        $("#touch").html(info.tips).hide().fadeIn(6000)
     })
 }
 
@@ -259,7 +259,8 @@ function read_letter(data) {
         type: "get",
         async: false,
         success: (res) => {
-            if (res.indexOf('\r\n')) {
+            if (res.indexOf('\r\n') > -1) {
+                log(`1111`)
                 content = res.split('\r\n')
             } else {
                 content = res.split('\n')
