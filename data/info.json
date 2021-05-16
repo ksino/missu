@@ -10,6 +10,7 @@
   "hour": 0,
   "minute": 0,
   "second": 0,
-  "is_skip": true,
+  "is_skip": false,
+  "speed": 100,
   "version": "0.0.2"
 }

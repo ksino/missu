@@ -11,21 +11,26 @@ function log() {
 
 $(function () {
     // setup garden
-    $loveHeart = $("#loveHeart")
-    var offsetX = $loveHeart.width() / 2
-    var offsetY = $loveHeart.height() / 2 - 55
+    log("222")
     $garden = $("#garden")
     gardenCanvas = $garden[0]
-    gardenCanvas.width = $("#loveHeart").width()
-    gardenCanvas.height = $("#loveHeart").height()
+    gardenCanvas.width = $(window).width()
+    gardenCanvas.height = $(window).height()
+    offsetX = $("#loveHeart").width() / 2
+    offsetY = $("#loveHeart").height() / 2 - 55
+    text_pos_x = offsetX
+    text_pos_y = offsetY
+    // log("offset2", offsetX, offsetY)
+    // gardenCanvas.width = $("#loveHeart").width()
+    // gardenCanvas.height = $("#loveHeart").height()
     gardenCtx = gardenCanvas.getContext("2d");
     gardenCtx.globalCompositeOperation = "lighter"
     garden = new Garden(gardenCtx, gardenCanvas)
 
     // let content = $("#content")
-    // let width = $loveHeart.width() + $("#code").width()
+    // let width = $("#loveHeart").width() + $("#code").width()
     // content.css("width", width)
-    // content.css("height", Math.max($loveHeart.height(), $("#code").height()))
+    // content.css("height", Math.max($("#loveHeart").height(), $("#code").height()))
     // content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
     // content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
 
@@ -45,35 +50,37 @@ $(window).resize(function () {
     log("window", width, height)
     if (width != clientWidth && height != clientHeight) {
     //     location.replace(location)
-        $("#code").css("width", width)
-        $("#code").css("height", height)
+        $("#letter").css("width", width)
+        $("#letter").css("height", height)
 
     }
 })
 
 function resize_heart() {
+    log("111")
     let width = window.screen.availWidth
     let height = window.screen.availHeight
-    log("window", width, height)
     let heart = $("#loveHeart")
-    heart.width
-    // heart.css("width", width * 0.9)
-    // heart.css("height", width * 0.9 * 625 / 670)
-    // $("#code").css("width", width * 2)
-    // $("#code").css("height", height)
+    log("window", width, height)
+
     if (width < 900) {
         log("small")
-        $("#code").css("font-size", "3em")
-        // $("#code").css("margin", "auto")
+        // $("#mainDiv").css("height", height)
+        $("#letter").css("font-size", "3rem")
     }
-    log("heart", heart.width(), heart.height())
 }
 
 function getHeartPoint(angle) {
     var t = angle / Math.PI;
     var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
     var y = -20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-    return new Array(offsetX + x, offsetY + y);
+    log("offset", offsetX, offsetY )
+    count++
+    if (count === 50) {
+        text_pos_x = offsetX + x
+        text_pos_x = offsetY + y
+    }
+    return new Array(offsetX + x, offsetY + y)
 }
 
 /**
@@ -131,41 +138,8 @@ function text_to_html(array) {
             let index = 0
 
             $ele.html('')
-            // 修改定时器的间隔时间
-            // read_letter()
-            // log("content", content)
-            // log("str", str)
             let length = content.length
-            // let t = 50
-            // let textTimer = setInterval(showText, t)
-            // function showText() {
-            //     // test是数组 按照回车符号'\r\n' 切割的文本
-            //     let current = content[index]
-            //     let interval
-            //     if (index < length) {
-            //         let html = `${$ele.html()}<span class="comments">${current}</span><br/><br/>`
-            //         $ele.html(html)
-            //         interval = content[index].length * t
-            //         index++
-            //         clearInterval(textTimer)
-            //     }
-            //     if (index < length) {
-            //         log("interval", interval)
-            //         textTimer = setInterval(showText, interval)
-            //     }
-            // }
 
-            // let waitTimer = setInterval(function () {
-            //     let current = info[index]
-            //     if (current) {
-            //         let html = `${$ele.html()}<span class="comments">${current}</span><br/>`
-            //         $ele.html(html)
-            //         index++
-            //
-            //     } else {
-            //         clearInterval(waitTimer)
-            //     }
-            // }, 75)
             str = text_to_html(content)
             let timer = setInterval(function () {
                 let current = str.substr(progress, 1)
@@ -183,7 +157,7 @@ function text_to_html(array) {
                 if (progress >= str.length) {
                     clearInterval(timer)
                 }
-            }, 200)
+            }, info.speed)
         })
         return this
     }
@@ -211,7 +185,6 @@ function timeElapse(date) {
         seconds = "0" + seconds
     }
     let result = `<span class="digit">${days} 天 </span><span class="digit">${hours}  小时 </span><span class="digit">${minutes} 分 </span><span class="digit">${seconds} 秒</span>`
-    //var result = "<span class=\"digit\">" + days + "</span> days <span class=\"digit\">" + hours + "</span> hours <span class=\"digit\">" + minutes + "</span> minutes <span class=\"digit\">" + seconds + "</span> seconds"
     $("#elapseClock").html(result)
 }
 
@@ -242,12 +215,14 @@ function showLoveU() {
 
 function adjust_words_position() {
     $('#words').css("position", "absolute")
-    $('#words').css("top", $("#garden").position().top + 195)
-    $('#words').css("left", $("#garden").position().left + 70)
+    // $('#words').css("top", $("#garden").width() + 195)
+    // $('#words').css("left", $("#garden").height() + 70)
+    $('#words').css("top", offsetX)
+    $('#words').css("left", offsetY / 2)
 }
 
-function adjust_code_position() {
-    $('#code').css("margin-top", ($("#garden").height() - $("#code").height()) / 2)
+function adjust_letter_position() {
+    $('#letter').css("margin-top", ($("#garden").height() - $("#letter").height()) / 2)
 }
 
 /**
@@ -281,7 +256,7 @@ function read_letter(data) {
             } else {
                 content = res.split('\n')
             }
-            log(content)
+            // log(content)
         },
         error: () => {
             log("fail")
