@@ -18,8 +18,7 @@
 <body>
 <div id="mainDiv">
     <div id="content">
-        <div id="code">
-        </div>
+        <div id="code"></div>
         <div id="loveHeart">
             <canvas id="garden"></canvas>
             <div id="words">
@@ -37,9 +36,10 @@
     resize_heart()
     $("#copyright").html(`Version © ${info.version}`)
     if (info.is_skip) {
+        $("#loveHeart").hide()
         $("#code").typewriter()
     } else {
-
+        $("#code").toggle()
 
         var offsetX = $("#loveHeart").width() / 2
         var offsetY = $("#loveHeart").height() / 2 - 55
@@ -77,6 +77,7 @@
             heart.click(function () {
                 adjust_code_position()
                 // 显示文字
+                $("#code").show()
                 $("#code").typewriter()
                 heart.hide()
             })

@@ -22,12 +22,12 @@ $(function () {
     gardenCtx.globalCompositeOperation = "lighter"
     garden = new Garden(gardenCtx, gardenCanvas)
 
-    let content = $("#content")
-    let width = $loveHeart.width() + $("#code").width()
-    content.css("width", width)
-    content.css("height", Math.max($loveHeart.height(), $("#code").height()))
-    content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
-    content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
+    // let content = $("#content")
+    // let width = $loveHeart.width() + $("#code").width()
+    // content.css("width", width)
+    // content.css("height", Math.max($loveHeart.height(), $("#code").height()))
+    // content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
+    // content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
 
     // renderLoop
     // 渲染爱心图形
@@ -57,14 +57,14 @@ function resize_heart() {
     log("window", width, height)
     let heart = $("#loveHeart")
     heart.width
-    heart.css("width", width * 0.9)
-    heart.css("height", width * 0.9 * 625 / 670)
-    $("#code").css("width", width * 2)
-    $("#code").css("height", height)
+    // heart.css("width", width * 0.9)
+    // heart.css("height", width * 0.9 * 625 / 670)
+    // $("#code").css("width", width * 2)
+    // $("#code").css("height", height)
     if (width < 900) {
         log("small")
-        $("#code").css("font-size", "4em")
-        $("#code").css("margin", "auto")
+        $("#code").css("font-size", "3em")
+        // $("#code").css("margin", "auto")
     }
     log("heart", heart.width(), heart.height())
 }
