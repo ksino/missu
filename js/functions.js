@@ -145,11 +145,11 @@ function getHeartPoint(angle) {
     var t = angle / Math.PI;
     var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
     var y = -20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-    log("offset", offsetX, offsetY )
     count++
     if (count === 50) {
         text_pos_x = offsetX + x
-        text_pos_x = offsetY + y
+        text_pos_y = offsetY + y
+        log("50 flower", text_pos_x, text_pos_y )
     }
     return new Array(offsetX + x, offsetY + y)
 }
@@ -282,12 +282,15 @@ function showLoveU() {
     love.fadeIn(4000)
 }
 
+/**
+ * 判断心形图里面的文字显示位置
+ */
 function adjust_words_position() {
     $('#words').css("position", "absolute")
     // $('#words').css("top", $("#garden").width() + 195)
     // $('#words').css("left", $("#garden").height() + 70)
-    $('#words').css("top", offsetX)
-    $('#words').css("left", offsetY / 2)
+    $('#words').css("top", text_pos_y + 50)
+    $('#words').css("left", text_pos_x / 2)
 }
 
 function adjust_letter_position() {
