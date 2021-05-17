@@ -1,7 +1,7 @@
 {
   "file": "letter.txt",
-  "message": "AA AAAAAAAA",
-  "love": "BBBBBBBB",
+  "message": "lover something want to say with you",
+  "love": "for every",
   "signal": "CC",
   "tips": "尝试点击这里吗？",
   "year": 2006,
@@ -12,5 +12,5 @@
   "second": 0,
   "is_skip": false,
   "speed": 100,
-  "version": "0.0.10"
+  "version": "0.0.11"
 }

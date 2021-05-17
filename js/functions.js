@@ -10,95 +10,126 @@ let text_pos_y = 0
 let offsetX
 let offsetY
 
+/**
+ * 打印函数
+ */
 function log() {
     console.log.apply(console, arguments)
 }
 
 /**
- * 启动函数
+ * 返回认识的时间
+ * @returns {Date}
+ */
+function get_date() {
+    let together = new Date()
+    together.setFullYear(info.year, info.month, info.day)
+    together.setHours(info.hour)
+    together.setMinutes(info.minute)
+    together.setSeconds(info.second)
+    together.setMilliseconds(0)
+    return together
+}
+
+/**
+ * 启动
  */
 $(function() {
     get_info()
     resize_heart()
-    $("#copyright").html(`Version © ${info.version}`)
+    // 调试：增加版本号 以确认git page 是否更新
+    $("#version").html(`Version © ${info.version}`)
+
+    // info.is_skip 是否跳过绘制心形图 直接显示信件内容
     if (info.is_skip) {
-        $("#loveHeart").hide()
+        $("#heart").hide()
         $("#letter").typewriter()
     } else {
         $("#letter").hide()
 
-        let together = new Date()
-        together.setFullYear(info.year, info.month, info.day)
-        together.setHours(info.hour)
-        together.setMinutes(info.minute)
-        together.setSeconds(info.second)
-        together.setMilliseconds(0)
+        let together = get_date()
 
-        if (!document.createElement('canvas').getContext) {
-            var msg = document.createElement("div")
-            msg.id = "errorMsg"
-            msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"
-            document.body.appendChild(msg)
-            $("#letter").css("display", "none")
-            $("#copyright").css("position", "absolute")
-            $("#copyright").css("bottom", "10px")
-            document.execCommand("stop")
-        } else {
+        if (document.createElement('canvas').getContext) {
             // 绘制图形
             setTimeout(function () {
-                startHeartAnimation()
+                start_heart_animation()
             }, 30)
 
-            $("#elapseClock").hide()
-            // timeElapse(together)
+            $("#clock").hide()
             // 更新时间
             setInterval(function () {
-                timeElapse(together)
+                time_elapse(together)
             }, 500)
-            let heart = $("#loveHeart")
-            heart.click(function () {
-                // adjust_letter_position()
-                // 显示文字
-                $("#main").css("height", "100%")
-                $("#letter").show()
-                $("#letter").typewriter()
-                heart.hide()
-            })
+            // let heart = $("#heart")
+            // heart.click(function () {
+            //     // 显示文字
+            //     $("#main").css("height", "100%")
+            //     $("#letter").show()
+            //     $("#letter").typewriter()
+            //     heart.hide()
+            // })
+        } else {
+            $("#letter").hide()
+            $("#version").hide()
+            document.execCommand("stop")
         }
+        setup_garden()
     }
+    log("start over")
 })
 
-$(function () {
-    // setup garden
+function setup_garden() {
     log("setup garden")
     $garden = $("#garden")
     gardenCanvas = $garden[0]
     gardenCanvas.width = $(window).width()
     gardenCanvas.height = $(window).height()
-    offsetX = $("#loveHeart").width() / 2
-    offsetY = $("#loveHeart").height() / 2 - 55
+    offsetX = $("#heart").width() / 2
+    offsetY = $("#heart").height() / 2 - 55
     text_pos_x = offsetX
     text_pos_y = offsetY
-    // log("offset2", offsetX, offsetY)
-    // gardenCanvas.width = $("#loveHeart").width()
-    // gardenCanvas.height = $("#loveHeart").height()
+
     gardenCtx = gardenCanvas.getContext("2d");
     gardenCtx.globalCompositeOperation = "lighter"
     garden = new Garden(gardenCtx, gardenCanvas)
 
-    // let content = $("#content")
-    // let width = $("#loveHeart").width() + $("#code").width()
-    // content.css("width", width)
-    // content.css("height", Math.max($("#loveHeart").height(), $("#code").height()))
-    // content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
-    // content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
-
-    // renderLoop
-    // 渲染爱心图形
+    // 渲染心形图
     setInterval(function () {
         garden.render();
     }, garden.options.growSpeed)
-})
+}
+
+// $(function () {
+//     // setup garden
+//     log("setup garden")
+//     $garden = $("#garden")
+//     gardenCanvas = $garden[0]
+//     gardenCanvas.width = $(window).width()
+//     gardenCanvas.height = $(window).height()
+//     offsetX = $("#heart").width() / 2
+//     offsetY = $("#heart").height() / 2 - 55
+//     text_pos_x = offsetX
+//     text_pos_y = offsetY
+//
+//     // gardenCanvas.width = $("#loveHeart").width()
+//     // gardenCanvas.height = $("#loveHeart").height()
+//     gardenCtx = gardenCanvas.getContext("2d");
+//     gardenCtx.globalCompositeOperation = "lighter"
+//     garden = new Garden(gardenCtx, gardenCanvas)
+//
+//     // let content = $("#content")
+//     // let width = $("#loveHeart").width() + $("#code").width()
+//     // content.css("width", width)
+//     // content.css("height", Math.max($("#loveHeart").height(), $("#code").height()))
+//     // content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
+//     // content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
+//
+//     // renderLoop
+//     // 渲染心形图
+//     setInterval(function () {
+//         garden.render();
+//     }, garden.options.growSpeed)
+// })
 
 /**
  * 改变窗口大小重新加载
@@ -108,7 +139,7 @@ $(window).resize(function () {
     var height = $(window).height()
     log("window", width, height)
     if (width != clientWidth && height != clientHeight) {
-    //     location.replace(location)
+        // location.replace(location)
         $("#letter").css("width", width)
         $("#letter").css("height", height)
 
@@ -119,22 +150,12 @@ $(window).resize(function () {
  * 自适应屏幕大小
  */
 function resize_heart() {
+    // 屏幕的可用宽度和高度
     let width = window.screen.availWidth
     let height = window.screen.availHeight
     log("window", width, height)
-    let heart = $("#loveHeart")
-
-    // heart.css("width", width * 0.9)
-    // heart.css("height", width * 0.9 * 625 / 670)
-    // $("#code").css("width", width * 2)
-    // $("#code").css("height", height)
-    // if ($("#code").width() < 900) {
-    //     $("#code").css("font-size", "2.5em")
-    //     $("#code").css("margin", "auto")
-    // }
      if (width < 900) {
         log("small screen")
-        // $("#mainDiv").css("height", height)
         $("#letter").css("font-size", "3rem")
     } else {
         log("big screen")
@@ -151,21 +172,23 @@ function getHeartPoint(angle) {
         text_pos_y = offsetY + y
         log("50 flower", text_pos_x, text_pos_y )
     }
-    return new Array(offsetX + x, offsetY + y)
+    //return new Array(offsetX + x, offsetY + y)
+    return [offsetX + x, offsetY + y]
 }
 
 /**
- * 开始绘制心型图形
+ * 绘制心形图
  */
-function startHeartAnimation() {
-    var interval = 50
-    var angle = 10
-    var heart = new Array()
-    var animationTimer = setInterval(function () {
+function start_heart_animation() {
+    let interval = 50
+    let angle = 10
+    //let flowers = new Array()
+    let flowers = []
+    let animationTimer = setInterval(function () {
         var bloom = getHeartPoint(angle)
         var draw = true
-        for (var i = 0; i < heart.length; i++) {
-            var p = heart[i]
+        for (var i = 0; i < flowers.length; i++) {
+            var p = flowers[i]
             var distance = Math.sqrt(Math.pow(p[0] - bloom[0], 2) + Math.pow(p[1] - bloom[1], 2))
             if (distance < garden.options.bloomRadius.max * 1.3) {
                 draw = false
@@ -173,12 +196,21 @@ function startHeartAnimation() {
             }
         }
         if (draw) {
-            heart.push(bloom)
+            flowers.push(bloom)
             garden.createRandomBloom(bloom[0], bloom[1])
         }
         if (angle >= 30) {
             clearInterval(animationTimer)
-            show_message()
+            show_loving()
+            //绑定click事件
+            let heart = $("#heart")
+            heart.click(function () {
+                // 显示文字
+                $("#main").css("height", "100%")
+                $("#letter").show()
+                $("#letter").typewriter()
+                heart.hide()
+            })
         } else {
             angle += 0.2
         }
@@ -186,7 +218,6 @@ function startHeartAnimation() {
 }
 
 function text_to_html(array) {
-    // array是数组 按照回车符号'\r\n' 切割的文本
     length = array.length
     let html = ""
     for (let i = 0; i < length; i++) {
@@ -235,7 +266,7 @@ function text_to_html(array) {
 /**
  * 显示相识的时间
  */
-function timeElapse(date) {
+function time_elapse(date) {
     var current = Date()
     var seconds = (Date.parse(current) - Date.parse(date)) / 1000
     var days = Math.floor(seconds / (3600 * 24))
@@ -254,28 +285,28 @@ function timeElapse(date) {
         seconds = "0" + seconds
     }
     let result = `<span class="digit">${days} 天 </span><span class="digit">${hours}  小时 </span><span class="digit">${minutes} 分 </span><span class="digit">${seconds} 秒</span>`
-    $("#elapseClock").html(result)
+    $("#clock").html(result)
 }
 
 /**
  * 显示心型图的文字
  */
-function show_message() {
+function show_loving() {
     adjust_words_position()
-    let message = $("#messages")
-    let showtime = $("#elapseClock")
+    let message = $("#loving")
+    let showtime = $("#clock")
     message.html(info.message)
     message.fadeIn(2000, function () {
         showtime.fadeIn(2000)
-        showLoveU()
-        $("#touch").html(info.tips).hide().fadeIn(6000)
+        show_sign()
+        $("#tips").html(info.tips).hide().fadeIn(6000)
     })
 }
 
 /**
  * 显示心型图形里面的署名
  */
-function showLoveU() {
+function show_sign() {
     let love = $('#sign')
     let html = `${info.love}<br/><div class="signature"> ${info.signal}</div>`
     love.html(html)
@@ -287,10 +318,10 @@ function showLoveU() {
  */
 function adjust_words_position() {
     $('#words').css("position", "absolute")
-    // $('#words').css("top", $("#garden").width() + 195)
-    // $('#words').css("left", $("#garden").height() + 70)
     $('#words').css("top", text_pos_y + 50)
     $('#words').css("left", text_pos_x / 2)
+    // $('#words').css("top", $("#garden").width() + 195)
+    // $('#words').css("left", $("#garden").height() + 70)
 }
 
 function adjust_letter_position() {
