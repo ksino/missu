@@ -9,10 +9,6 @@ let text_pos_x = 0
 let text_pos_y = 0
 let offsetX
 let offsetY
-// div
-let heart_div = $("#loveHeart")
-let letter_div = $("#letter")
-let version_div = $("#copyright")
 
 function log() {
     console.log.apply(console, arguments)
@@ -24,14 +20,16 @@ function log() {
 $(function() {
     get_info()
     resize_heart()
-    version_div.html(`Version © ${info.version}`)
+    $("#copyright").html(`Version © ${info.version}`)
     if (info.is_skip) {
-        heart_div.hide()
-        letter_div.typewriter()
+        $("#loveHeart").hide()
+        $("#letter").typewriter()
     } else {
-        letter_div.toggle()
-        var offsetX = heart_div.width() / 2
-        var offsetY = heart_div.height() / 2 - 55
+        $("#letter").toggle()
+
+
+        var offsetX = $("#loveHeart").width() / 2
+        var offsetY = $("#loveHeart").height() / 2 - 55
 
         let together = new Date()
         together.setFullYear(info.year, info.month, info.day)
@@ -45,9 +43,9 @@ $(function() {
             msg.id = "errorMsg"
             msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"
             document.body.appendChild(msg)
-            letter_div.css("display", "none")
-            version_div.css("position", "absolute")
-            version_div.css("bottom", "10px")
+            $("#letter").css("display", "none")
+            $("#copyright").css("position", "absolute")
+            $("#copyright").css("bottom", "10px")
             document.execCommand("stop")
         } else {
             // 绘制图形
@@ -62,14 +60,14 @@ $(function() {
             setInterval(function () {
                 timeElapse(together)
             }, 500)
-            // let heart = $("#loveHeart")
-            heart_div.click(function () {
+            let heart = $("#loveHeart")
+            heart.click(function () {
                 // adjust_letter_position()
                 // 显示文字
                 $("#main").css("height", "100%")
-                letter_div.show()
-                letter_div.typewriter()
-                heart_div.hide()
+                $("#letter").show()
+                $("#letter").typewriter()
+                heart.hide()
             })
         }
     }
@@ -82,21 +80,21 @@ $(function () {
     gardenCanvas = $garden[0]
     gardenCanvas.width = $(window).width()
     gardenCanvas.height = $(window).height()
-    offsetX = heart_div.width() / 2
-    offsetY = heart_div.height() / 2 - 55
+    offsetX = $("#loveHeart").width() / 2
+    offsetY = $("#loveHeart").height() / 2 - 55
     text_pos_x = offsetX
     text_pos_y = offsetY
     // log("offset2", offsetX, offsetY)
-    // gardenCanvas.width = heart_div.width()
-    // gardenCanvas.height = heart_div.height()
+    // gardenCanvas.width = $("#loveHeart").width()
+    // gardenCanvas.height = $("#loveHeart").height()
     gardenCtx = gardenCanvas.getContext("2d");
     gardenCtx.globalCompositeOperation = "lighter"
     garden = new Garden(gardenCtx, gardenCanvas)
 
     // let content = $("#content")
-    // let width = heart_div.width() + $("#code").width()
+    // let width = $("#loveHeart").width() + $("#code").width()
     // content.css("width", width)
-    // content.css("height", Math.max(heart_div.height(), $("#code").height()))
+    // content.css("height", Math.max($("#loveHeart").height(), $("#code").height()))
     // content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
     // content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
 
@@ -116,8 +114,8 @@ $(window).resize(function () {
     log("window", width, height)
     if (width != clientWidth && height != clientHeight) {
     //     location.replace(location)
-        letter_div.css("width", width)
-        letter_div.css("height", height)
+        $("#letter").css("width", width)
+        $("#letter").css("height", height)
 
     }
 })
@@ -129,6 +127,7 @@ function resize_heart() {
     let width = window.screen.availWidth
     let height = window.screen.availHeight
     log("window", width, height)
+    let heart = $("#loveHeart")
 
     // heart.css("width", width * 0.9)
     // heart.css("height", width * 0.9 * 625 / 670)
@@ -141,7 +140,7 @@ function resize_heart() {
      if (width < 900) {
         log("small screen")
         // $("#mainDiv").css("height", height)
-        letter_div.css("font-size", "3rem")
+        $("#letter").css("font-size", "3rem")
     } else {
         log("big screen")
     }
@@ -297,7 +296,7 @@ function adjust_words_position() {
 }
 
 function adjust_letter_position() {
-    letter_div.css("margin-top", ($("#garden").height() - letter_div.height()) / 2)
+    $('#letter').css("margin-top", ($("#garden").height() - $("#letter").height()) / 2)
 }
 
 /**
