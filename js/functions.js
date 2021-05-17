@@ -7,6 +7,10 @@ let content
 let count = 0
 let text_pos_x = 0
 let text_pos_y = 0
+let pos_x_min = 0
+let pos_y_min = 0
+let pos_x_max = 0
+let pos_y_max = 0
 let offsetX
 let offsetY
 
@@ -37,8 +41,11 @@ function get_date() {
 $(function() {
     get_info()
     resize_heart()
+    // 调试 显示div的边框
+    show_border(false)
     // 调试：增加版本号 以确认git page 是否更新
     $("#version").html(`Version © ${info.version}`)
+    $("#version").hide()
 
     // info.is_skip 是否跳过绘制心形图 直接显示信件内容
     if (info.is_skip) {
@@ -60,14 +67,6 @@ $(function() {
             setInterval(function () {
                 time_elapse(together)
             }, 500)
-            // let heart = $("#heart")
-            // heart.click(function () {
-            //     // 显示文字
-            //     $("#main").css("height", "100%")
-            //     $("#letter").show()
-            //     $("#letter").typewriter()
-            //     heart.hide()
-            // })
         } else {
             $("#letter").hide()
             $("#version").hide()
@@ -84,10 +83,9 @@ function setup_garden() {
     gardenCanvas = $garden[0]
     gardenCanvas.width = $(window).width()
     gardenCanvas.height = $(window).height()
+    log("setup garden", $("#heart").width(), $("#heart").height())
     offsetX = $("#heart").width() / 2
     offsetY = $("#heart").height() / 2 - 55
-    text_pos_x = offsetX
-    text_pos_y = offsetY
 
     gardenCtx = gardenCanvas.getContext("2d");
     gardenCtx.globalCompositeOperation = "lighter"
@@ -162,18 +160,35 @@ function resize_heart() {
     }
 }
 
-function getHeartPoint(angle) {
-    var t = angle / Math.PI;
-    var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
-    var y = -20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+function get_heart_point(angle) {
+    let t = angle / Math.PI
+    let x = 19.5 * (16 * Math.pow(Math.sin(t), 3))
+    let y = -20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
     count++
-    if (count === 50) {
+    // log(t, x, y)
+    if (count === 51) {
+        pos_y_min = y
         text_pos_x = offsetX + x
         text_pos_y = offsetY + y
         log("50 flower", text_pos_x, text_pos_y )
     }
+    if (count === 1) {
+        pos_y_min = y
+        log("50 flower", text_pos_x, text_pos_y )
+    }
     //return new Array(offsetX + x, offsetY + y)
     return [offsetX + x, offsetY + y]
+}
+
+function get_x() {
+    let x_min = 19.5 * (16 * Math.pow(-1, 3))
+    let x_max = 19.5 * (16 * Math.pow(1, 3))
+    let width = (x_max - x_min)
+    let height = (pos_y_max - pos_y_min)
+    text_pos_x = x_min + offsetX + width * 0.1
+    text_pos_y = pos_y_min + offsetY + height * 0.05
+    $("#words").css("width", width * 0.8)
+    $("#words").css("height", height * 0.8)
 }
 
 /**
@@ -183,12 +198,12 @@ function start_heart_animation() {
     let interval = 50
     let angle = 10
     //let flowers = new Array()
-    let flowers = []
+    let blooms = []
     let animationTimer = setInterval(function () {
-        var bloom = getHeartPoint(angle)
-        var draw = true
-        for (var i = 0; i < flowers.length; i++) {
-            var p = flowers[i]
+        let bloom = get_heart_point(angle)
+        let draw = true
+        for (var i = 0; i < blooms.length; i++) {
+            var p = blooms[i]
             var distance = Math.sqrt(Math.pow(p[0] - bloom[0], 2) + Math.pow(p[1] - bloom[1], 2))
             if (distance < garden.options.bloomRadius.max * 1.3) {
                 draw = false
@@ -196,21 +211,13 @@ function start_heart_animation() {
             }
         }
         if (draw) {
-            flowers.push(bloom)
+            blooms.push(bloom)
             garden.createRandomBloom(bloom[0], bloom[1])
         }
         if (angle >= 30) {
             clearInterval(animationTimer)
             show_loving()
-            //绑定click事件
-            let heart = $("#heart")
-            heart.click(function () {
-                // 显示文字
-                $("#main").css("height", "100%")
-                $("#letter").show()
-                $("#letter").typewriter()
-                heart.hide()
-            })
+            click_heart()
         } else {
             angle += 0.2
         }
@@ -314,12 +321,27 @@ function show_sign() {
 }
 
 /**
+ * click心形图 显示信件文字
+ */
+function click_heart() {
+    let heart = $("#heart")
+    heart.click(function () {
+        // 显示文字
+        $("#main").css("height", "100%")
+        $("#letter").show()
+        $("#letter").typewriter()
+        heart.hide()
+    })
+}
+
+/**
  * 判断心形图里面的文字显示位置
  */
 function adjust_words_position() {
+    get_x()
     $('#words').css("position", "absolute")
-    $('#words').css("top", text_pos_y + 50)
-    $('#words').css("left", text_pos_x / 2)
+    $('#words').css("top", text_pos_y)
+    $('#words').css("left", text_pos_x)
     // $('#words').css("top", $("#garden").width() + 195)
     // $('#words').css("left", $("#garden").height() + 70)
 }
@@ -365,4 +387,16 @@ function read_letter(data) {
         }
     }
     $.ajax(request)
+}
+
+function show_border(flag) {
+    let status = "none"
+    if (flag) {
+        status = "dotted"
+    }
+    $("#words").css("border-style", status)
+    $("#heart").css("border-style", status)
+    $("#letter").css("border-style", status)
+    $("#version").css("border-style", status)
+    $("#content").css("border-style", status)
 }
