@@ -45,8 +45,8 @@ $(window).resize(function () {
     log("window", width, height)
     if (width != clientWidth && height != clientHeight) {
     //     location.replace(location)
-        $("#code").css("width", width)
-        $("#code").css("height", height)
+        $("#letter").css("width", width)
+        $("#letter").css("height", height)
 
     }
 })
@@ -72,7 +72,13 @@ function getHeartPoint(angle) {
     var t = angle / Math.PI;
     var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
     var y = -20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-    return new Array(offsetX + x, offsetY + y);
+    log("offset", offsetX, offsetY )
+    count++
+    if (count === 50) {
+        text_pos_x = offsetX + x
+        text_pos_x = offsetY + y
+    }
+    return new Array(offsetX + x, offsetY + y)
 }
 
 /**
@@ -207,8 +213,10 @@ function showLoveU() {
 
 function adjust_words_position() {
     $('#words').css("position", "absolute")
-    $('#words').css("top", $("#garden").position().top + 195)
-    $('#words').css("left", $("#garden").position().left + 70)
+    // $('#words').css("top", $("#garden").width() + 195)
+    // $('#words').css("left", $("#garden").height() + 70)
+    $('#words').css("top", offsetX)
+    $('#words').css("left", offsetY / 2)
 }
 
 function adjust_letter_position() {
@@ -246,7 +254,7 @@ function read_letter(data) {
             } else {
                 content = res.split('\n')
             }
-            log(content)
+            // log(content)
         },
         error: () => {
             log("fail")
