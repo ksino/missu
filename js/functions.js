@@ -130,41 +130,8 @@ function text_to_html(array) {
             let index = 0
 
             $ele.html('')
-            // 修改定时器的间隔时间
-            // read_letter()
-            // log("content", content)
-            // log("str", str)
             let length = content.length
-            // let t = 50
-            // let textTimer = setInterval(showText, t)
-            // function showText() {
-            //     // test是数组 按照回车符号'\r\n' 切割的文本
-            //     let current = content[index]
-            //     let interval
-            //     if (index < length) {
-            //         let html = `${$ele.html()}<span class="comments">${current}</span><br/><br/>`
-            //         $ele.html(html)
-            //         interval = content[index].length * t
-            //         index++
-            //         clearInterval(textTimer)
-            //     }
-            //     if (index < length) {
-            //         log("interval", interval)
-            //         textTimer = setInterval(showText, interval)
-            //     }
-            // }
 
-            // let waitTimer = setInterval(function () {
-            //     let current = info[index]
-            //     if (current) {
-            //         let html = `${$ele.html()}<span class="comments">${current}</span><br/>`
-            //         $ele.html(html)
-            //         index++
-            //
-            //     } else {
-            //         clearInterval(waitTimer)
-            //     }
-            // }, 75)
             str = text_to_html(content)
             let timer = setInterval(function () {
                 let current = str.substr(progress, 1)
@@ -182,7 +149,7 @@ function text_to_html(array) {
                 if (progress >= str.length) {
                     clearInterval(timer)
                 }
-            }, 200)
+            }, info.speed)
         })
         return this
     }
@@ -210,7 +177,6 @@ function timeElapse(date) {
         seconds = "0" + seconds
     }
     let result = `<span class="digit">${days} 天 </span><span class="digit">${hours}  小时 </span><span class="digit">${minutes} 分 </span><span class="digit">${seconds} 秒</span>`
-    //var result = "<span class=\"digit\">" + days + "</span> days <span class=\"digit\">" + hours + "</span> hours <span class=\"digit\">" + minutes + "</span> minutes <span class=\"digit\">" + seconds + "</span> seconds"
     $("#elapseClock").html(result)
 }
 
@@ -245,8 +211,8 @@ function adjust_words_position() {
     $('#words').css("left", $("#garden").position().left + 70)
 }
 
-function adjust_code_position() {
-    $('#code').css("margin-top", ($("#garden").height() - $("#code").height()) / 2)
+function adjust_letter_position() {
+    $('#letter').css("margin-top", ($("#garden").height() - $("#letter").height()) / 2)
 }
 
 /**
