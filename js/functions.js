@@ -70,6 +70,11 @@ function resize_heart() {
     //     $("#code").css("font-size", "2.5em")
     //     $("#code").css("margin", "auto")
     // }
+     if (width < 900) {
+        log("small")
+        // $("#mainDiv").css("height", height)
+        $("#letter").css("font-size", "3rem")
+    }
 }
 
 function getHeartPoint(angle) {
