@@ -25,11 +25,7 @@ $(function() {
         $("#loveHeart").hide()
         $("#letter").typewriter()
     } else {
-        $("#letter").toggle()
-
-
-        var offsetX = $("#loveHeart").width() / 2
-        var offsetY = $("#loveHeart").height() / 2 - 55
+        $("#letter").hide()
 
         let together = new Date()
         together.setFullYear(info.year, info.month, info.day)
@@ -53,8 +49,7 @@ $(function() {
                 startHeartAnimation()
             }, 30)
 
-            let showtime = $("#elapseClock")
-            showtime.hide()
+            $("#elapseClock").hide()
             // timeElapse(together)
             // 更新时间
             setInterval(function () {
