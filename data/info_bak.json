@@ -1,8 +1,8 @@
 {
   "file": "letter.txt",
-  "message": "AA AAAAAAAA",
-  "love": "BBBBBBBB",
-  "signal": "CC",
+  "message": "丽芳, 从相识到现在有多久了？",
+  "love": "爱你的人",
+  "signal": "飞",
   "tips": "尝试点击这里吗？",
   "year": 2006,
   "month": 1,
@@ -12,5 +12,5 @@
   "second": 0,
   "is_skip": false,
   "speed": 100,
-  "version": "0.0.7"
+  "version": "0.0.6"
 }

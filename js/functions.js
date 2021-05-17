@@ -1,36 +1,102 @@
-// variables
-var $window = $(window), gardenCtx, gardenCanvas, $garden, garden
+// 全局变量
+let $window = $(window), gardenCtx, gardenCanvas, $garden, garden
+let clientWidth = $(window).width()
+let clientHeight = $(window).height()
 let info
 let content
-var clientWidth = $(window).width()
-var clientHeight = $(window).height()
+let count = 0
+let text_pos_x = 0
+let text_pos_y = 0
+let offsetX
+let offsetY
+// div
+let heart_div = $("#loveHeart")
+let letter_div = $("#letter")
+let version_div = $("#copyright")
 
 function log() {
     console.log.apply(console, arguments)
 }
 
+/**
+ * 启动函数
+ */
+$(function() {
+    get_info()
+    resize_heart()
+    version_div.html(`Version © ${info.version}`)
+    if (info.is_skip) {
+        heart_div.hide()
+        letter_div.typewriter()
+    } else {
+        letter_div.toggle()
+        var offsetX = heart_div.width() / 2
+        var offsetY = heart_div.height() / 2 - 55
+
+        let together = new Date()
+        together.setFullYear(info.year, info.month, info.day)
+        together.setHours(info.hour)
+        together.setMinutes(info.minute)
+        together.setSeconds(info.second)
+        together.setMilliseconds(0)
+
+        if (!document.createElement('canvas').getContext) {
+            var msg = document.createElement("div")
+            msg.id = "errorMsg"
+            msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"
+            document.body.appendChild(msg)
+            letter_div.css("display", "none")
+            version_div.css("position", "absolute")
+            version_div.css("bottom", "10px")
+            document.execCommand("stop")
+        } else {
+            // 绘制图形
+            setTimeout(function () {
+                startHeartAnimation()
+            }, 30)
+
+            let showtime = $("#elapseClock")
+            showtime.hide()
+            // timeElapse(together)
+            // 更新时间
+            setInterval(function () {
+                timeElapse(together)
+            }, 500)
+            // let heart = $("#loveHeart")
+            heart_div.click(function () {
+                // adjust_letter_position()
+                // 显示文字
+                $("#main").css("height", "100%")
+                letter_div.show()
+                letter_div.typewriter()
+                heart_div.hide()
+            })
+        }
+    }
+})
+
 $(function () {
     // setup garden
-    log("222")
+    log("setup garden")
     $garden = $("#garden")
     gardenCanvas = $garden[0]
     gardenCanvas.width = $(window).width()
     gardenCanvas.height = $(window).height()
-    offsetX = $("#loveHeart").width() / 2
-    offsetY = $("#loveHeart").height() / 2 - 55
+    offsetX = heart_div.width() / 2
+    offsetY = heart_div.height() / 2 - 55
     text_pos_x = offsetX
     text_pos_y = offsetY
     // log("offset2", offsetX, offsetY)
-    // gardenCanvas.width = $("#loveHeart").width()
-    // gardenCanvas.height = $("#loveHeart").height()
+    // gardenCanvas.width = heart_div.width()
+    // gardenCanvas.height = heart_div.height()
     gardenCtx = gardenCanvas.getContext("2d");
     gardenCtx.globalCompositeOperation = "lighter"
     garden = new Garden(gardenCtx, gardenCanvas)
 
     // let content = $("#content")
-    // let width = $("#loveHeart").width() + $("#code").width()
+    // let width = heart_div.width() + $("#code").width()
     // content.css("width", width)
-    // content.css("height", Math.max($("#loveHeart").height(), $("#code").height()))
+    // content.css("height", Math.max(heart_div.height(), $("#code").height()))
     // content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
     // content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
 
@@ -50,17 +116,19 @@ $(window).resize(function () {
     log("window", width, height)
     if (width != clientWidth && height != clientHeight) {
     //     location.replace(location)
-        $("#letter").css("width", width)
-        $("#letter").css("height", height)
+        letter_div.css("width", width)
+        letter_div.css("height", height)
 
     }
 })
 
+/**
+ * 自适应屏幕大小
+ */
 function resize_heart() {
     let width = window.screen.availWidth
     let height = window.screen.availHeight
     log("window", width, height)
-    let heart = $("#loveHeart")
 
     // heart.css("width", width * 0.9)
     // heart.css("height", width * 0.9 * 625 / 670)
@@ -71,9 +139,11 @@ function resize_heart() {
     //     $("#code").css("margin", "auto")
     // }
      if (width < 900) {
-        log("small")
+        log("small screen")
         // $("#mainDiv").css("height", height)
-        $("#letter").css("font-size", "3rem")
+        letter_div.css("font-size", "3rem")
+    } else {
+        log("big screen")
     }
 }
 
@@ -134,7 +204,7 @@ function text_to_html(array) {
 }
 
 /**
- * 逐个文字显示
+ * 逐个文字显示，类似打字效果
  */
 (function ($) {
     $.fn.typewriter = function () {
@@ -157,9 +227,7 @@ function text_to_html(array) {
                 } else {
                     progress++
                 }
-                // 不明白
-                let text = str.substring(0, progress) + (progress & 1 ? '_' : '')
-                // log("text", text)
+                // 不太明白
                 $ele.html(str.substring(0, progress) + (progress & 1 ? '_' : ''))
                 if (progress >= str.length) {
                     clearInterval(timer)
@@ -214,7 +282,7 @@ function show_message() {
  * 显示心型图形里面的署名
  */
 function showLoveU() {
-    let love = $('#loveu')
+    let love = $('#sign')
     let html = `${info.love}<br/><div class="signature"> ${info.signal}</div>`
     love.html(html)
     love.fadeIn(4000)
@@ -229,11 +297,11 @@ function adjust_words_position() {
 }
 
 function adjust_letter_position() {
-    $('#letter').css("margin-top", ($("#garden").height() - $("#letter").height()) / 2)
+    letter_div.css("margin-top", ($("#garden").height() - letter_div.height()) / 2)
 }
 
 /**
- * 读取json文件
+ * 读取info.json文件
  */
 function get_info() {
     let request = {
@@ -249,7 +317,6 @@ function get_info() {
     $.ajax(request)
 }
 
-
 function read_letter(data) {
     info = data
     let request = {
@@ -258,7 +325,7 @@ function read_letter(data) {
         async: false,
         success: (res) => {
             if (res.indexOf('\r\n') > -1) {
-                log(`1111`)
+                log("get local data")
                 content = res.split('\r\n')
             } else {
                 content = res.split('\n')

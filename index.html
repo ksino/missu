@@ -16,7 +16,7 @@
 </head>
 
 <body>
-<div id="mainDiv">
+<div id="main">
     <div id="content">
         <div id="letter"></div>
         <div id="loveHeart">
@@ -24,7 +24,7 @@
             <div id="words">
                 <div id="messages"></div>
                 <div id="elapseClock"></div>
-                <div id="loveu"></div>
+                <div id="sign"></div>
                 <div id="touch"></div>
             </div>
         </div>
@@ -32,61 +32,63 @@
     <div id="copyright"></div>
 </div>
 <script type="text/javascript">
-    get_info()
-    resize_heart()
-    $("#copyright").html(`Version © ${info.version}`)
-    if (info.is_skip) {
-        $("#loveHeart").hide()
-        $("#letter").typewriter()
-    } else {
-        $("#letter").toggle()
-        var text_pos_x = 0
-        var text_pos_y = 0
-        var count = 0
-
-        var offsetX = $("#loveHeart").width() / 2
-        var offsetY = $("#loveHeart").height() / 2 - 55
-
-        let together = new Date()
-        together.setFullYear(info.year, info.month, info.day)
-        together.setHours(info.hour)
-        together.setMinutes(info.minute)
-        together.setSeconds(info.second)
-        together.setMilliseconds(0)
-
-        if (!document.createElement('canvas').getContext) {
-            var msg = document.createElement("div")
-            msg.id = "errorMsg"
-            msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"
-            document.body.appendChild(msg)
-            $("#letter").css("display", "none")
-            $("#copyright").css("position", "absolute")
-            $("#copyright").css("bottom", "10px")
-            document.execCommand("stop")
-        } else {
-            // 绘制图形
-            setTimeout(function () {
-                startHeartAnimation()
-            }, 30)
-
-            let showtime = $("#elapseClock")
-            showtime.hide()
-            // timeElapse(together)
-            // 更新时间
-            setInterval(function () {
-                timeElapse(together)
-            }, 500)
-            let heart = $("#loveHeart")
-            heart.click(function () {
-                // adjust_letter_position()
-                // 显示文字
-                $("#mainDiv").css("height", "100%")
-                $("#letter").show()
-                $("#letter").typewriter()
-                heart.hide()
-            })
-        }
-    }
+    // get_info()
+    // resize_heart()
+    // 增加版本号 以确认git page 是否更新
+    // $("#copyright").html(`Version © ${info.version}`)
+    // info.is_skip 是否跳过绘制心形图 直接显示信件内容
+    // if (info.is_skip) {
+    //     $("#loveHeart").hide()
+    //     $("#letter").typewriter()
+    // } else {
+    //     $("#letter").toggle()
+    //     var text_pos_x = 0
+    //     var text_pos_y = 0
+    //     var count = 0
+    //
+    //     var offsetX = $("#loveHeart").width() / 2
+    //     var offsetY = $("#loveHeart").height() / 2 - 55
+    //
+    //     let together = new Date()
+    //     together.setFullYear(info.year, info.month, info.day)
+    //     together.setHours(info.hour)
+    //     together.setMinutes(info.minute)
+    //     together.setSeconds(info.second)
+    //     together.setMilliseconds(0)
+    //
+    //     if (!document.createElement('canvas').getContext) {
+    //         var msg = document.createElement("div")
+    //         msg.id = "errorMsg"
+    //         msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"
+    //         document.body.appendChild(msg)
+    //         $("#letter").css("display", "none")
+    //         $("#copyright").css("position", "absolute")
+    //         $("#copyright").css("bottom", "10px")
+    //         document.execCommand("stop")
+    //     } else {
+    //         // 绘制图形
+    //         setTimeout(function () {
+    //             startHeartAnimation()
+    //         }, 30)
+    //
+    //         let showtime = $("#elapseClock")
+    //         showtime.hide()
+    //         // timeElapse(together)
+    //         // 更新时间
+    //         setInterval(function () {
+    //             timeElapse(together)
+    //         }, 500)
+    //         let heart = $("#loveHeart")
+    //         heart.click(function () {
+    //             // adjust_letter_position()
+    //             // 显示文字
+    //             $("#main").css("height", "100%")
+    //             $("#letter").show()
+    //             $("#letter").typewriter()
+    //             heart.hide()
+    //         })
+    //     }
+    // }
 </script>
 </body>
 </html>
