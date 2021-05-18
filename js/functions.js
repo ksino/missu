@@ -13,8 +13,7 @@ let pos_x_max = 0
 let pos_y_max = 0
 let offsetX
 let offsetY
-let temp = $window.height()
-let flag = false
+let move_scale = 1
 
 /**
  * 打印函数
@@ -24,7 +23,7 @@ function log() {
 }
 
 /**
- * 返回认识的时间
+ * 认识的时间点
  * @returns {Date}
  */
 function get_date() {
@@ -38,7 +37,7 @@ function get_date() {
 }
 
 /**
- * 启动
+ * 入口
  */
 $(function() {
     get_info()
@@ -55,7 +54,6 @@ $(function() {
         $("#letter").typewriter()
     } else {
         $("#letter").hide()
-
         let together = get_date()
 
         if (document.createElement('canvas').getContext) {
@@ -69,14 +67,14 @@ $(function() {
             setInterval(function () {
                 time_elapse(together)
             }, 500)
+            setup_garden()
         } else {
+            // 浏览器不支持canvas的处理
             $("#letter").hide()
             $("#version").hide()
             document.execCommand("stop")
         }
-        setup_garden()
     }
-    log("start over")
 })
 
 function setup_garden() {
@@ -99,38 +97,6 @@ function setup_garden() {
     }, garden.options.growSpeed)
 }
 
-// $(function () {
-//     // setup garden
-//     log("setup garden")
-//     $garden = $("#garden")
-//     gardenCanvas = $garden[0]
-//     gardenCanvas.width = $(window).width()
-//     gardenCanvas.height = $(window).height()
-//     offsetX = $("#heart").width() / 2
-//     offsetY = $("#heart").height() / 2 - 55
-//     text_pos_x = offsetX
-//     text_pos_y = offsetY
-//
-//     // gardenCanvas.width = $("#loveHeart").width()
-//     // gardenCanvas.height = $("#loveHeart").height()
-//     gardenCtx = gardenCanvas.getContext("2d");
-//     gardenCtx.globalCompositeOperation = "lighter"
-//     garden = new Garden(gardenCtx, gardenCanvas)
-//
-//     // let content = $("#content")
-//     // let width = $("#loveHeart").width() + $("#code").width()
-//     // content.css("width", width)
-//     // content.css("height", Math.max($("#loveHeart").height(), $("#code").height()))
-//     // content.css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10))
-//     // content.css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10))
-//
-//     // renderLoop
-//     // 渲染心形图
-//     setInterval(function () {
-//         garden.render();
-//     }, garden.options.growSpeed)
-// })
-
 /**
  * 改变窗口大小重新加载
  */
@@ -139,7 +105,6 @@ $(window).resize(function () {
     var height = $(window).height()
     log("window", width, height)
     if (width != clientWidth && height != clientHeight) {
-        // location.replace(location)
         $("#letter").css("width", width)
         $("#letter").css("height", height)
 
@@ -155,10 +120,12 @@ function resize_heart() {
     let height = window.screen.availHeight
     log("window", width, height)
      if (width < 900) {
-        log("small screen")
+         move_scale = 1.05
+        // log("small screen")
         $("#letter").css("font-size", "3rem")
     } else {
-        log("big screen")
+         move_scale = 1.25
+        // log("big screen")
     }
 }
 
@@ -170,15 +137,10 @@ function get_heart_point(angle) {
     // log(t, x, y)
     if (count === 51) {
         pos_y_min = y
-        text_pos_x = offsetX + x
-        text_pos_y = offsetY + y
-        log("50 flower", text_pos_x, text_pos_y )
     }
     if (count === 1) {
         pos_y_min = y
-        log("50 flower", text_pos_x, text_pos_y )
     }
-    //return new Array(offsetX + x, offsetY + y)
     return [offsetX + x, offsetY + y]
 }
 
@@ -199,7 +161,6 @@ function get_x() {
 function start_heart_animation() {
     let interval = 50
     let angle = 10
-    //let flowers = new Array()
     let blooms = []
     let animationTimer = setInterval(function () {
         let bloom = get_heart_point(angle)
@@ -231,7 +192,6 @@ function text_to_html(array) {
     let html = ""
     for (let i = 0; i < length; i++) {
         let current = array[i]
-
         html += `<span class="comments">${current}</span><br/><br/>`
     }
     return html
@@ -345,10 +305,8 @@ function click_heart() {
 function adjust_words_position() {
     get_x()
     $('#words').css("position", "absolute")
-    $('#words').css("top", text_pos_y)
+    $('#words').css("top", text_pos_y * move_scale)
     $('#words').css("left", text_pos_x)
-    // $('#words').css("top", $("#garden").width() + 195)
-    // $('#words').css("left", $("#garden").height() + 70)
 }
 
 function adjust_letter_position() {
@@ -407,14 +365,11 @@ function show_border(flag) {
 }
 
 function auto_scroll() {
-    let c_div = $('#content')
-    let l_div = $('#letter')
-    let c = c_div[0]
-    setTimeout(function () {
-        flag = true
-    }, 15000)
-    if (flag) {
-        c.scrollTop = c.scrollHeight
+    let content_div = $('#content')[0]
+    let letter_div = $('#letter')[0]
+    // 判断letter div的文本是溢出 是则滚动到底部
+    if (letter_div.scrollHeight > letter_div.clientHeight) {
+        content_div.scrollTop = content_div.scrollHeight
     }
 
 }

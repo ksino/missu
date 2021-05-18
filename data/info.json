@@ -1,16 +1,16 @@
 {
   "file": "letter.txt",
-  "message": "乌里 something want to say with you",
-  "love": "for every",
-  "signal": "张浩",
-  "tips": "尝试点击这里吗？",
-  "year": 2006,
-  "month": 1,
-  "day": 1,
-  "hour": 0,
-  "minute": 0,
+  "message": "某某 你知道我们相识多久了吗？",
+  "love": "挚友",
+  "signal": "某某",
+  "tips": "点击一下这里吧！",
+  "year": 2020,
+  "month": 5,
+  "day": 24,
+  "hour": 23,
+  "minute": 39,
   "second": 0,
   "is_skip": false,
-  "speed": 200,
-  "version": "0.0.13"
+  "speed": 150,
+  "version": "0.0.14"
 }
