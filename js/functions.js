@@ -13,6 +13,8 @@ let pos_x_max = 0
 let pos_y_max = 0
 let offsetX
 let offsetY
+let temp = $window.height()
+let flag = false
 
 /**
  * 打印函数
@@ -248,11 +250,14 @@ function text_to_html(array) {
 
             $ele.html('')
             let length = content.length
+            let content_div = $("#content")
+            content_div.css("height", $(window).height() * 0.9)
 
             str = text_to_html(content)
             let timer = setInterval(function () {
                 let current = str.substr(progress, 1)
                 // log("current", current)
+                auto_scroll()
 
                 if (current === '<') {
                     progress = str.indexOf('>', progress) + 1
@@ -400,3 +405,17 @@ function show_border(flag) {
     $("#version").css("border-style", status)
     $("#content").css("border-style", status)
 }
+
+function auto_scroll() {
+    let c_div = $('#content')
+    let l_div = $('#letter')
+    let c = c_div[0]
+    setTimeout(function () {
+        flag = true
+    }, 15000)
+    if (flag) {
+        c.scrollTop = c.scrollHeight
+    }
+
+}
+

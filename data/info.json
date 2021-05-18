@@ -11,6 +11,6 @@
   "minute": 0,
   "second": 0,
   "is_skip": false,
-  "speed": 100,
-  "version": "0.0.12"
+  "speed": 200,
+  "version": "0.0.13"
 }

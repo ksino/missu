@@ -19,7 +19,9 @@ body {
 #content {
     /*border-style: dotted;*/
     border-color: black;
+	width: 100%;
     height: 95%;
+	overflow: auto;
 }
 
 #heart {
