@@ -1,19 +1,24 @@
 // 全局变量
-let $window = $(window), gardenCtx, gardenCanvas, $garden, garden
+let $window = $(window)
+let gardenCtx
+let gardenCanvas
+let $garden
+let garden
 let clientWidth = $(window).width()
 let clientHeight = $(window).height()
+// json文件信息
 let info
+// 信件内容
 let content
 let count = 0
+// 心形图里面的文本坐标
 let text_pos_x = 0
 let text_pos_y = 0
-let pos_x_min = 0
 let pos_y_min = 0
-let pos_x_max = 0
 let pos_y_max = 0
 let offsetX
 let offsetY
-let move_scale = 1
+let move_scale
 
 /**
  * 打印函数
@@ -41,6 +46,10 @@ function get_date() {
  */
 $(function() {
     get_info()
+
+})
+
+function main() {
     resize_heart()
     // 调试 显示div的边框
     show_border(false)
@@ -75,7 +84,7 @@ $(function() {
             document.execCommand("stop")
         }
     }
-})
+}
 
 function setup_garden() {
     log("setup garden")
@@ -98,11 +107,11 @@ function setup_garden() {
 }
 
 /**
- * 改变窗口大小重新加载
+ * 改变窗口事件
  */
 $(window).resize(function () {
-    var width = $(window).width()
-    var height = $(window).height()
+    let width = $(window).width()
+    let height = $(window).height()
     log("window", width, height)
     if (width != clientWidth && height != clientHeight) {
         $("#letter").css("width", width)
@@ -118,14 +127,14 @@ function resize_heart() {
     // 屏幕的可用宽度和高度
     let width = window.screen.availWidth
     let height = window.screen.availHeight
-    log("window", width, height)
+    log("window", width, height, clientWidth, clientHeight)
      if (width < 900) {
-         move_scale = 1.05
         // log("small screen")
+         move_scale = 1.05
         $("#letter").css("font-size", "3rem")
     } else {
-         move_scale = 1.25
         // log("big screen")
+         move_scale = 1.1
     }
 }
 
@@ -134,7 +143,6 @@ function get_heart_point(angle) {
     let x = 19.5 * (16 * Math.pow(Math.sin(t), 3))
     let y = -20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
     count++
-    // log(t, x, y)
     if (count === 51) {
         pos_y_min = y
     }
@@ -144,7 +152,7 @@ function get_heart_point(angle) {
     return [offsetX + x, offsetY + y]
 }
 
-function get_x() {
+function get_heart_text_position() {
     let x_min = 19.5 * (16 * Math.pow(-1, 3))
     let x_max = 19.5 * (16 * Math.pow(1, 3))
     let width = (x_max - x_min)
@@ -286,7 +294,7 @@ function show_sign() {
 }
 
 /**
- * click心形图 显示信件文字
+ * 点击心形图 显示信件内容
  */
 function click_heart() {
     let heart = $("#heart")
@@ -303,14 +311,10 @@ function click_heart() {
  * 判断心形图里面的文字显示位置
  */
 function adjust_words_position() {
-    get_x()
+    get_heart_text_position()
     $('#words').css("position", "absolute")
     $('#words').css("top", text_pos_y * move_scale)
     $('#words').css("left", text_pos_x)
-}
-
-function adjust_letter_position() {
-    $('#letter').css("margin-top", ($("#garden").height() - $("#letter").height()) / 2)
 }
 
 /**
@@ -321,7 +325,7 @@ function get_info() {
         url: "./data/info.json",
         type: "get",
         dataType: "json",
-        async: false,
+        async: true,
         success: read_letter,
         error: () => {
             log("fail")
@@ -332,10 +336,11 @@ function get_info() {
 
 function read_letter(data) {
     info = data
+    log("info", info)
     let request = {
         url: `./data/${info.file}`,
         type: "get",
-        async: false,
+        async: true,
         success: (res) => {
             if (res.indexOf('\r\n') > -1) {
                 log("get local data")
@@ -343,6 +348,7 @@ function read_letter(data) {
             } else {
                 content = res.split('\n')
             }
+            main()
             // log(content)
         },
         error: () => {
@@ -368,9 +374,9 @@ function auto_scroll() {
     let content_div = $('#content')[0]
     let letter_div = $('#letter')[0]
     // 判断letter div的文本是溢出 是则滚动到底部
+    // https://www.cnblogs.com/youhong/p/11502738.html
     if (letter_div.scrollHeight > letter_div.clientHeight) {
         content_div.scrollTop = content_div.scrollHeight
     }
 
 }
-
