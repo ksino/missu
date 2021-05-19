@@ -222,22 +222,27 @@ function text_to_html(array) {
             content_div.css("height", $(window).height() * 0.9)
 
             str = text_to_html(content)
-            let timer = setInterval(function () {
-                let current = str.substr(progress, 1)
-                // log("current", current)
-                auto_scroll()
+            if (info.speed > 0) {
 
-                if (current === '<') {
-                    progress = str.indexOf('>', progress) + 1
-                } else {
-                    progress++
-                }
-                // 不太明白
-                $ele.html(str.substring(0, progress) + (progress & 1 ? '_' : ''))
-                if (progress >= str.length) {
-                    clearInterval(timer)
-                }
-            }, info.speed)
+                let timer = setInterval(function () {
+                    let current = str.substr(progress, 1)
+                    // log("current", current)
+                    auto_scroll()
+
+                    if (current === '<') {
+                        progress = str.indexOf('>', progress) + 1
+                    } else {
+                        progress++
+                    }
+                    // 不太明白
+                    $ele.html(str.substring(0, progress) + (progress & 1 ? '_' : ''))
+                    if (progress >= str.length) {
+                        clearInterval(timer)
+                    }
+                }, info.speed)
+            } else {
+                $ele.html(str)
+            }
         })
         return this
     }
@@ -288,7 +293,7 @@ function show_loving() {
  */
 function show_sign() {
     let love = $('#sign')
-    let html = `${info.love}<br/><div class="signature"> ${info.signal}</div>`
+    let html = `${info.love}<br/><div class="signature"> ${info.sign}</div>`
     love.html(html)
     love.fadeIn(4000)
 }
